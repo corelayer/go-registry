@@ -14,21 +14,29 @@
  *    limitations under the License.
  */
 
-package registry
+package netscaler
 
 import (
 	"github.com/corelayer/go-cryptostruct/pkg/cryptostruct"
 
-	"github.com/corelayer/go-registry/pkg/registry/certificates"
-	"github.com/corelayer/go-registry/pkg/registry/machines"
+	"github.com/corelayer/go-registry/pkg/registry/machines/netscaler/adc"
+	"github.com/corelayer/go-registry/pkg/registry/machines/netscaler/sdx"
 )
 
 type Registry struct {
-	Machines     machines.Registry     `json:"machines,omitempty" yaml:"machines,omitempty" mapstructure:"machines,omitempty" secure:"true"`
-	Certificates certificates.Registry `json:"certificates,omitempty" yaml:"certificates,omitempty" mapstructure:"certificates,omitempty" secure:"true"`
+	Adc adc.Registry `json:"adc,omitempty" yaml:"adc,omitempty" mapstructure:"adc,omitempty" secure:"true"`
+	Sdx sdx.Registry `json:"sdx,omitempty" yaml:"sdx,omitempty" mapstructure:"sdx,omitempty" secure:"true"`
 }
 
-func (c Registry) GetTransformConfig() cryptostruct.TransformConfig {
+func (r Registry) GetAdcEnvironmentByName(name string) (adc.Environment, error) {
+	return r.Adc.GetEnvironmentByName(name)
+}
+
+func (r Registry) GetAdcEnvironmentNames() []string {
+	return r.Adc.GetEnvironmentNames()
+}
+
+func (r Registry) GetTransformConfig() cryptostruct.TransformConfig {
 	return cryptostruct.TransformConfig{
 		Decrypted: Registry{},
 		Encrypted: SecureRegistry{},
@@ -36,9 +44,9 @@ func (c Registry) GetTransformConfig() cryptostruct.TransformConfig {
 }
 
 type SecureRegistry struct {
-	Machines     machines.SecureRegistry     `json:"machines,omitempty" yaml:"machines,omitempty" mapstructure:"machines,omitempty" secure:"true"`
-	Certificates certificates.SecureRegistry `json:"certificates,omitempty" yaml:"certificates,omitempty" mapstructure:"certificates,omitempty" secure:"true"`
-	CryptoParams cryptostruct.CryptoParams   `json:"cryptoParams" yaml:"cryptoParams" mapstructure:"cryptoParams"`
+	Adc          adc.SecureRegistry        `json:"adc,omitempty" yaml:"adc,omitempty" mapstructure:"adc,omitempty" secure:"true"`
+	Sdx          sdx.SecureRegistry        `json:"sdx,omitempty" yaml:"sdx,omitempty" mapstructure:"sdx,omitempty" secure:"true"`
+	CryptoParams cryptostruct.CryptoParams `json:"cryptoParams" yaml:"cryptoParams" mapstructure:"cryptoParams"`
 }
 
 func (s SecureRegistry) GetTransformConfig() cryptostruct.TransformConfig {

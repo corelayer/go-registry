@@ -38,15 +38,12 @@ func (r Registry) GetProviderByName(name string) (Provider, error) {
 }
 
 func (r Registry) GetProviderNames() []string {
-	var (
-		output []string
-	)
-	output = make([]string, len(r.Providers))
+	names := make([]string, len(r.Providers))
 	for i := 0; i < len(r.Providers); i++ {
-		output[i] = r.Providers[i].Name
+		names[i] = r.Providers[i].Name
 	}
 
-	return output
+	return names
 }
 
 func (r Registry) GetServiceByName(name string) (Service, error) {
@@ -59,15 +56,12 @@ func (r Registry) GetServiceByName(name string) (Service, error) {
 }
 
 func (r Registry) GetServiceNames() []string {
-	var (
-		output []string
-	)
-	output = make([]string, len(r.Services))
+	names := make([]string, len(r.Services))
 	for i := 0; i < len(r.Services); i++ {
-		output[i] = r.Services[i].Name
+		names[i] = r.Services[i].Name
 	}
 
-	return output
+	return names
 }
 
 func (r Registry) GetTransformConfig() cryptostruct.TransformConfig {
@@ -87,15 +81,12 @@ func (r Registry) GetUserByName(name string) (User, error) {
 }
 
 func (r Registry) GetUserNames() []string {
-	var (
-		output []string
-	)
-	output = make([]string, len(r.Users))
+	names := make([]string, len(r.Users))
 	for i := 0; i < len(r.Users); i++ {
-		output[i] = r.Users[i].Name
+		names[i] = r.Users[i].Name
 	}
 
-	return output
+	return names
 }
 
 type SecureRegistry struct {

@@ -16,6 +16,7 @@
 
 package adc
 
+// Settings TODO - Remove UserAgent, AutoLogin, Timeout??
 type Settings struct {
 	UseSsl                    bool   `json:"useSsl,omitempty" yaml:"useSsl,omitempty" mapstructure:"useSsl,omitempty"`
 	Timeout                   int    `json:"timeout,omitempty" yaml:"timeout,omitempty" mapstructure:"timeout,omitempty"`
