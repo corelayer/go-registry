@@ -14,21 +14,19 @@
  *    limitations under the License.
  */
 
-package registry
+package machines
 
 import (
 	"github.com/corelayer/go-cryptostruct/pkg/cryptostruct"
 
-	"github.com/corelayer/go-registry/pkg/registry/certificates"
-	"github.com/corelayer/go-registry/pkg/registry/machines"
+	"github.com/corelayer/go-registry/pkg/registry/machines/netscaler"
 )
 
 type Registry struct {
-	Machines     machines.Registry     `json:"machines,omitempty" yaml:"machines,omitempty" mapstructure:"machines,omitempty" secure:"true"`
-	Certificates certificates.Registry `json:"certificates,omitempty" yaml:"certificates,omitempty" mapstructure:"certificates,omitempty" secure:"true"`
+	NetScaler netscaler.Registry `json:"netscaler,omitempty" yaml:"netscaler,omitempty" mapstructure:"netscaler,omitempty" secure:"true"`
 }
 
-func (c Registry) GetTransformConfig() cryptostruct.TransformConfig {
+func (r Registry) GetTransformConfig() cryptostruct.TransformConfig {
 	return cryptostruct.TransformConfig{
 		Decrypted: Registry{},
 		Encrypted: SecureRegistry{},
@@ -36,9 +34,8 @@ func (c Registry) GetTransformConfig() cryptostruct.TransformConfig {
 }
 
 type SecureRegistry struct {
-	Machines     machines.SecureRegistry     `json:"machines,omitempty" yaml:"machines,omitempty" mapstructure:"machines,omitempty" secure:"true"`
-	Certificates certificates.SecureRegistry `json:"certificates,omitempty" yaml:"certificates,omitempty" mapstructure:"certificates,omitempty" secure:"true"`
-	CryptoParams cryptostruct.CryptoParams   `json:"cryptoParams" yaml:"cryptoParams" mapstructure:"cryptoParams"`
+	NetScaler    netscaler.SecureRegistry  `json:"netscaler,omitempty" yaml:"netscaler,omitempty" mapstructure:"netscaler,omitempty" secure:"true"`
+	CryptoParams cryptostruct.CryptoParams `json:"cryptoParams" yaml:"cryptoParams" mapstructure:"cryptoParams"`
 }
 
 func (s SecureRegistry) GetTransformConfig() cryptostruct.TransformConfig {

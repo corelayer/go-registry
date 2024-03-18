@@ -14,26 +14,36 @@
  *    limitations under the License.
  */
 
-package netscaler
+package certificates
 
 import (
+	"fmt"
+
 	"github.com/corelayer/go-cryptostruct/pkg/cryptostruct"
 
-	"github.com/corelayer/go-registry/pkg/registry/netscaler/adc"
-	"github.com/corelayer/go-registry/pkg/registry/netscaler/sdx"
+	"github.com/corelayer/go-registry/pkg/registry/certificates/acme"
 )
 
 type Registry struct {
-	Adc adc.Registry `json:"adc,omitempty" yaml:"adc,omitempty" mapstructure:"adc,omitempty" secure:"true"`
-	Sdx sdx.Registry `json:"sdx,omitempty" yaml:"sdx,omitempty" mapstructure:"sdx,omitempty" secure:"true"`
+	Acme        acme.Registry `json:"acme,omitempty" yaml:"acme,omitempty" mapstructure:"acme,omitempty" secure:"true"`
+	Passphrases []Passphrase  `json:"passphrases,omitempty" yaml:"passphrases,omitempty" mapstructure:"passphrases,omitempty" secure:"true"`
 }
 
-func (r Registry) GetAdcEnvironmentByName(name string) (adc.Environment, error) {
-	return r.Adc.GetEnvironmentByName(name)
+func (r Registry) GetPassphraseByName(name string) (Passphrase, error) {
+	for _, p := range r.Passphrases {
+		if p.Name == name {
+			return p, nil
+		}
+	}
+	return Passphrase{}, fmt.Errorf("could not find passphrase %s", name)
 }
 
-func (r Registry) GetAdcEnvironmentNames() []string {
-	return r.Adc.GetEnvironmentNames()
+func (r Registry) GetPassphraseNames() []string {
+	names := make([]string, len(r.Passphrases))
+	for _, p := range r.Passphrases {
+		names = append(names, p.Name)
+	}
+	return names
 }
 
 func (r Registry) GetTransformConfig() cryptostruct.TransformConfig {
@@ -44,8 +54,8 @@ func (r Registry) GetTransformConfig() cryptostruct.TransformConfig {
 }
 
 type SecureRegistry struct {
-	Adc          adc.SecureRegistry        `json:"adc,omitempty" yaml:"adc,omitempty" mapstructure:"adc,omitempty" secure:"true"`
-	Sdx          sdx.SecureRegistry        `json:"sdx,omitempty" yaml:"sdx,omitempty" mapstructure:"sdx,omitempty" secure:"true"`
+	Acme         acme.SecureRegistry       `json:"acme,omitempty" yaml:"acme,omitempty" mapstructure:"acme,omitempty" secure:"true"`
+	Passphrases  []SecurePassphrase        `json:"passphrases,omitempty" yaml:"passphrases,omitempty" mapstructure:"passphrases,omitempty" secure:"true"`
 	CryptoParams cryptostruct.CryptoParams `json:"cryptoParams" yaml:"cryptoParams" mapstructure:"cryptoParams"`
 }
 
