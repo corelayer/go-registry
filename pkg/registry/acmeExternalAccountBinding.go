@@ -14,35 +14,51 @@
  *    limitations under the License.
  */
 
-package acme
+package registry
 
-import "github.com/corelayer/go-cryptostruct/pkg/cryptostruct"
+import (
+	"encoding/hex"
 
-type ExternalAccountBinding struct {
+	"github.com/corelayer/go-cryptostruct/pkg/cryptostruct"
+)
+
+type AcmeExternalAccountBinding struct {
 	Kid  string `json:"kid,omitempty" yaml:"kid,omitempty" mapstructure:"kid,omitempty" secure:"true"`
 	Hmac string `json:"hmac,omitempty" yaml:"hmac,omitempty" mapstructure:"hmac,omitempty" secure:"true"`
 }
 
-func (e ExternalAccountBinding) GetTransformConfig() cryptostruct.TransformConfig {
+func (e AcmeExternalAccountBinding) GetTransformConfig() cryptostruct.TransformConfig {
 	return cryptostruct.TransformConfig{
-		Decrypted: ExternalAccountBinding{},
-		Encrypted: SecureExternalAccountBinding{},
+		Decrypted: AcmeExternalAccountBinding{},
+		Encrypted: SecureAcmeExternalAccountBinding{},
 	}
 }
 
-type SecureExternalAccountBinding struct {
+type SecureAcmeExternalAccountBinding struct {
 	Kid          string                    `json:"kid,omitempty" yaml:"kid,omitempty" mapstructure:"kid,omitempty" secure:"true"`
 	Hmac         string                    `json:"hmac,omitempty" yaml:"hmac,omitempty" mapstructure:"hmac,omitempty" secure:"true"`
 	CryptoParams cryptostruct.CryptoParams `json:"cryptoParams" yaml:"cryptoParams" mapstructure:"cryptoParams"`
 }
 
-func (s SecureExternalAccountBinding) GetTransformConfig() cryptostruct.TransformConfig {
-	return cryptostruct.TransformConfig{
-		Decrypted: ExternalAccountBinding{},
-		Encrypted: SecureExternalAccountBinding{},
+func (s SecureAcmeExternalAccountBinding) Decrypt(key string) (AcmeExternalAccountBinding, error) {
+	var (
+		err       error
+		decrypted any
+	)
+	decrypter := cryptostruct.NewDecrypter(hex.EncodeToString([]byte(key)), s.GetTransformConfig())
+	if decrypted, err = decrypter.Transform(s); err != nil {
+		return AcmeExternalAccountBinding{}, err
 	}
+	return decrypted.(AcmeExternalAccountBinding), nil
 }
 
-func (s SecureExternalAccountBinding) GetCryptoParams() cryptostruct.CryptoParams {
+func (s SecureAcmeExternalAccountBinding) GetCryptoParams() cryptostruct.CryptoParams {
 	return s.CryptoParams
+}
+
+func (s SecureAcmeExternalAccountBinding) GetTransformConfig() cryptostruct.TransformConfig {
+	return cryptostruct.TransformConfig{
+		Decrypted: AcmeExternalAccountBinding{},
+		Encrypted: SecureAcmeExternalAccountBinding{},
+	}
 }

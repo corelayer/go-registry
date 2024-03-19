@@ -14,37 +14,53 @@
  *    limitations under the License.
  */
 
-package adc
+package registry
 
-import "github.com/corelayer/go-cryptostruct/pkg/cryptostruct"
+import (
+	"encoding/hex"
 
-type Credential struct {
+	"github.com/corelayer/go-cryptostruct/pkg/cryptostruct"
+)
+
+type NetScalerAdcCredential struct {
 	Name     string `json:"name,omitempty" yaml:"name,omitempty" mapstructure:"name,omitempty" secure:"false"`
 	Username string `json:"username,omitempty" yaml:"username,omitempty" mapstructure:"username,omitempty" secure:"true"`
 	Password string `json:"password,omitempty" yaml:"password,omitempty" mapstructure:"password,omitempty" secure:"true"`
 }
 
-func (c Credential) GetTransformConfig() cryptostruct.TransformConfig {
+func (c NetScalerAdcCredential) GetTransformConfig() cryptostruct.TransformConfig {
 	return cryptostruct.TransformConfig{
-		Decrypted: Credential{},
-		Encrypted: SecureCredential{},
+		Decrypted: NetScalerAdcCredential{},
+		Encrypted: SecureNetScalerAdcCredential{},
 	}
 }
 
-type SecureCredential struct {
+type SecureNetScalerAdcCredential struct {
 	Name         string                    `json:"name,omitempty" yaml:"name,omitempty" mapstructure:"name,omitempty" secure:"false"`
 	Username     string                    `json:"username,omitempty" yaml:"username,omitempty" mapstructure:"username,omitempty" secure:"true"`
 	Password     string                    `json:"password,omitempty" yaml:"password,omitempty" mapstructure:"password,omitempty" secure:"true"`
 	CryptoParams cryptostruct.CryptoParams `json:"cryptoParams" yaml:"cryptoParams" mapstructure:"cryptoParams"`
 }
 
-func (s SecureCredential) GetTransformConfig() cryptostruct.TransformConfig {
-	return cryptostruct.TransformConfig{
-		Decrypted: Credential{},
-		Encrypted: SecureCredential{},
+func (s SecureNetScalerAdcCredential) Decrypt(key string) (NetScalerAdcCredential, error) {
+	var (
+		err       error
+		decrypted any
+	)
+	decrypter := cryptostruct.NewDecrypter(hex.EncodeToString([]byte(key)), s.GetTransformConfig())
+	if decrypted, err = decrypter.Transform(s); err != nil {
+		return NetScalerAdcCredential{}, err
 	}
+	return decrypted.(NetScalerAdcCredential), nil
 }
 
-func (s SecureCredential) GetCryptoParams() cryptostruct.CryptoParams {
+func (s SecureNetScalerAdcCredential) GetCryptoParams() cryptostruct.CryptoParams {
 	return s.CryptoParams
+}
+
+func (s SecureNetScalerAdcCredential) GetTransformConfig() cryptostruct.TransformConfig {
+	return cryptostruct.TransformConfig{
+		Decrypted: NetScalerAdcCredential{},
+		Encrypted: SecureNetScalerAdcCredential{},
+	}
 }

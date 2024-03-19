@@ -18,14 +18,11 @@ package registry
 
 import (
 	"github.com/corelayer/go-cryptostruct/pkg/cryptostruct"
-
-	"github.com/corelayer/go-registry/pkg/registry/certificates"
-	"github.com/corelayer/go-registry/pkg/registry/machines"
 )
 
 type Registry struct {
-	Machines     machines.Registry     `json:"machines,omitempty" yaml:"machines,omitempty" mapstructure:"machines,omitempty" secure:"true"`
-	Certificates certificates.Registry `json:"certificates,omitempty" yaml:"certificates,omitempty" mapstructure:"certificates,omitempty" secure:"true"`
+	Machines     MachinesRegistry    `json:"machines,omitempty" yaml:"machines,omitempty" mapstructure:"machines,omitempty" secure:"true"`
+	Certificates CertificateRegistry `json:"certificates,omitempty" yaml:"certificates,omitempty" mapstructure:"certificates,omitempty" secure:"true"`
 }
 
 func (c Registry) GetTransformConfig() cryptostruct.TransformConfig {
@@ -36,9 +33,13 @@ func (c Registry) GetTransformConfig() cryptostruct.TransformConfig {
 }
 
 type SecureRegistry struct {
-	Machines     machines.SecureRegistry     `json:"machines,omitempty" yaml:"machines,omitempty" mapstructure:"machines,omitempty" secure:"true"`
-	Certificates certificates.SecureRegistry `json:"certificates,omitempty" yaml:"certificates,omitempty" mapstructure:"certificates,omitempty" secure:"true"`
-	CryptoParams cryptostruct.CryptoParams   `json:"cryptoParams" yaml:"cryptoParams" mapstructure:"cryptoParams"`
+	Machines     SecureMachinesRegistry    `json:"machines,omitempty" yaml:"machines,omitempty" mapstructure:"machines,omitempty" secure:"true"`
+	Certificates SecureCertificateRegistry `json:"certificates,omitempty" yaml:"certificates,omitempty" mapstructure:"certificates,omitempty" secure:"true"`
+	CryptoParams cryptostruct.CryptoParams `json:"cryptoParams" yaml:"cryptoParams" mapstructure:"cryptoParams"`
+}
+
+func (s SecureRegistry) GetCryptoParams() cryptostruct.CryptoParams {
+	return s.CryptoParams
 }
 
 func (s SecureRegistry) GetTransformConfig() cryptostruct.TransformConfig {
@@ -46,8 +47,4 @@ func (s SecureRegistry) GetTransformConfig() cryptostruct.TransformConfig {
 		Decrypted: Registry{},
 		Encrypted: SecureRegistry{},
 	}
-}
-
-func (s SecureRegistry) GetCryptoParams() cryptostruct.CryptoParams {
-	return s.CryptoParams
 }

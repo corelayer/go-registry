@@ -14,35 +14,51 @@
  *    limitations under the License.
  */
 
-package acme
+package registry
 
-import "github.com/corelayer/go-cryptostruct/pkg/cryptostruct"
+import (
+	"encoding/hex"
 
-type Service struct {
+	"github.com/corelayer/go-cryptostruct/pkg/cryptostruct"
+)
+
+type AcmeService struct {
 	Name string `json:"name,omitempty" yaml:"name,omitempty" mapstructure:"name,omitempty" secure:"false"`
 	Url  string `json:"url,omitempty" yaml:"url,omitempty" mapstructure:"url,omitempty" secure:"true"`
 }
 
-func (s Service) GetTransformConfig() cryptostruct.TransformConfig {
+func (s AcmeService) GetTransformConfig() cryptostruct.TransformConfig {
 	return cryptostruct.TransformConfig{
-		Decrypted: Service{},
-		Encrypted: SecureService{},
+		Decrypted: AcmeService{},
+		Encrypted: SecureAcmeService{},
 	}
 }
 
-type SecureService struct {
+type SecureAcmeService struct {
 	Name         string                    `json:"name,omitempty" yaml:"name,omitempty" mapstructure:"name,omitempty" secure:"false"`
 	Url          string                    `json:"url,omitempty" yaml:"url,omitempty" mapstructure:"url,omitempty" secure:"true"`
 	CryptoParams cryptostruct.CryptoParams `json:"cryptoParams" yaml:"cryptoParams" mapstructure:"cryptoParams"`
 }
 
-func (s SecureService) GetTransformConfig() cryptostruct.TransformConfig {
-	return cryptostruct.TransformConfig{
-		Decrypted: Service{},
-		Encrypted: SecureService{},
+func (s SecureAcmeService) Decrypt(key string) (AcmeService, error) {
+	var (
+		err       error
+		decrypted any
+	)
+	decrypter := cryptostruct.NewDecrypter(hex.EncodeToString([]byte(key)), s.GetTransformConfig())
+	if decrypted, err = decrypter.Transform(s); err != nil {
+		return AcmeService{}, err
 	}
+	return decrypted.(AcmeService), nil
 }
 
-func (s SecureService) GetCryptoParams() cryptostruct.CryptoParams {
+func (s SecureAcmeService) GetCryptoParams() cryptostruct.CryptoParams {
 	return s.CryptoParams
+}
+
+func (s SecureAcmeService) GetTransformConfig() cryptostruct.TransformConfig {
+	return cryptostruct.TransformConfig{
+		Decrypted: AcmeService{},
+		Encrypted: SecureAcmeService{},
+	}
 }

@@ -14,37 +14,51 @@
  *    limitations under the License.
  */
 
-package certificates
+package registry
 
 import (
+	"encoding/hex"
+
 	"github.com/corelayer/go-cryptostruct/pkg/cryptostruct"
 )
 
-type Passphrase struct {
+type CertificatePassphrase struct {
 	Name  string `json:"name,omitempty" yaml:"name,omitempty" mapstructure:"name,omitempty" secure:"false"`
 	Value string `json:"value,omitempty" yaml:"value,omitempty" mapstructure:"value,omitempty" secure:"true"`
 }
 
-func (c Passphrase) GetTransformConfig() cryptostruct.TransformConfig {
+func (c CertificatePassphrase) GetTransformConfig() cryptostruct.TransformConfig {
 	return cryptostruct.TransformConfig{
-		Decrypted: Passphrase{},
-		Encrypted: SecurePassphrase{},
+		Decrypted: CertificatePassphrase{},
+		Encrypted: SecureCertificatePassphrase{},
 	}
 }
 
-type SecurePassphrase struct {
+type SecureCertificatePassphrase struct {
 	Name         string                    `json:"name,omitempty" yaml:"name,omitempty" mapstructure:"name,omitempty" secure:"false"`
 	Value        string                    `json:"value,omitempty" yaml:"value,omitempty" mapstructure:"value,omitempty" secure:"true"`
 	CryptoParams cryptostruct.CryptoParams `json:"cryptoParams" yaml:"cryptoParams" mapstructure:"cryptoParams"`
 }
 
-func (s SecurePassphrase) GetTransformConfig() cryptostruct.TransformConfig {
-	return cryptostruct.TransformConfig{
-		Decrypted: Passphrase{},
-		Encrypted: SecurePassphrase{},
+func (s SecureCertificatePassphrase) Decrypt(key string) (CertificatePassphrase, error) {
+	var (
+		err       error
+		decrypted any
+	)
+	decrypter := cryptostruct.NewDecrypter(hex.EncodeToString([]byte(key)), s.GetTransformConfig())
+	if decrypted, err = decrypter.Transform(s); err != nil {
+		return CertificatePassphrase{}, err
 	}
+	return decrypted.(CertificatePassphrase), nil
 }
 
-func (s SecurePassphrase) GetCryptoParams() cryptostruct.CryptoParams {
+func (s SecureCertificatePassphrase) GetCryptoParams() cryptostruct.CryptoParams {
 	return s.CryptoParams
+}
+
+func (s SecureCertificatePassphrase) GetTransformConfig() cryptostruct.TransformConfig {
+	return cryptostruct.TransformConfig{
+		Decrypted: CertificatePassphrase{},
+		Encrypted: SecureCertificatePassphrase{},
+	}
 }
