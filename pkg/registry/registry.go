@@ -16,16 +16,13 @@
 
 package registry
 
-import (
-	"github.com/corelayer/go-cryptostruct/pkg/cryptostruct"
-)
+import "github.com/corelayer/go-cryptostruct/pkg/cryptostruct"
 
 type Registry struct {
-	Machines     MachinesRegistry    `json:"machines,omitempty" yaml:"machines,omitempty" mapstructure:"machines,omitempty" secure:"true"`
-	Certificates CertificateRegistry `json:"certificates,omitempty" yaml:"certificates,omitempty" mapstructure:"certificates,omitempty" secure:"true"`
+	Organizations []Organization `json:"organizations,omitempty" yaml:"organizations,omitempty" mapstructure:"organizations,omitempty" secure:"true"`
 }
 
-func (c Registry) GetTransformConfig() cryptostruct.TransformConfig {
+func (o Registry) GetTransformConfig() cryptostruct.TransformConfig {
 	return cryptostruct.TransformConfig{
 		Decrypted: Registry{},
 		Encrypted: SecureRegistry{},
@@ -33,9 +30,9 @@ func (c Registry) GetTransformConfig() cryptostruct.TransformConfig {
 }
 
 type SecureRegistry struct {
-	Machines     SecureMachinesRegistry    `json:"machines,omitempty" yaml:"machines,omitempty" mapstructure:"machines,omitempty" secure:"true"`
-	Certificates SecureCertificateRegistry `json:"certificates,omitempty" yaml:"certificates,omitempty" mapstructure:"certificates,omitempty" secure:"true"`
-	CryptoParams cryptostruct.CryptoParams `json:"cryptoParams" yaml:"cryptoParams" mapstructure:"cryptoParams"`
+	Name          string                    `json:"name" yaml:"name" mapstructure:"name" secure:"false"`
+	Organizations []SecureOrganization      `json:"organizations,omitempty" yaml:"organizations,omitempty" mapstructure:"organizations,omitempty" secure:"true"`
+	CryptoParams  cryptostruct.CryptoParams `json:"cryptoParams" yaml:"cryptoParams" mapstructure:"cryptoParams"`
 }
 
 func (s SecureRegistry) GetCryptoParams() cryptostruct.CryptoParams {
