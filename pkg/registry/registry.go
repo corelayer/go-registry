@@ -18,6 +18,93 @@ package registry
 
 import "github.com/corelayer/go-cryptostruct/pkg/cryptostruct"
 
+func NewEmptyRegistry() Registry {
+	return Registry{
+		Organizations: []Organization{
+			{
+				Name: "organization name",
+				Registry: OrganizationRegistry{
+					Machines: MachinesRegistry{
+						NetScaler: NetScalerRegistry{
+							Adc: NetScalerAdcRegistry{
+								Environments: []NetScalerAdcEnvironment{
+									{
+										Name: "netcaler adc environment name",
+										Management: NetScalerAdcNode{
+											Name:    "netscaler adc snip name",
+											Address: "netscaler adc snip ip address | fqdn",
+										},
+										Nodes: []NetScalerAdcNode{
+											{
+												Name:    "netscaler adc nsip name",
+												Address: "netscaler adc nsip ip address | fqdn",
+											},
+										},
+										Credentials: []NetScalerAdcCredential{
+											{
+												Name:     "netscaler adc credential name",
+												Username: "netscaler adc credential username",
+												Password: "netscaler adc credential password",
+											},
+										},
+										Settings: NetScalerAdcSettings{
+											UseSsl:                    false,
+											Timeout:                   30,
+											UserAgent:                 "go-cts",
+											ValidateServerCertificate: true,
+											LogTlsSecrets:             false,
+											LogTlsSecretsDestination:  "",
+											AutoLogin:                 false,
+										},
+									},
+								},
+							},
+						},
+					},
+					Certificates: CertificateRegistry{
+						Acme: AcmeRegistry{
+							Services: []AcmeService{
+								{
+									Name: "acme service name",
+									Url:  "acme service url",
+								},
+							},
+							Users: []AcmeUser{
+								{
+									Name:  "acme user name",
+									Email: "acme user email",
+									ExternalAccountBinding: AcmeExternalAccountBinding{
+										Kid:  "acme user kid value",
+										Hmac: "acme user hmac value",
+									},
+								},
+							},
+							Providers: []AcmeProvider{
+								{
+									Name:      "acme provider name",
+									Type:      "acme provider type",
+									Challenge: "acme challenge type: http-01 | dns-01",
+									Variables: []AcmeVariable{
+										{
+											Key:   "acme provider variable name",
+											Value: "acme provider variable value",
+										},
+									},
+								},
+							},
+						},
+						Passphrases: []CertificatePassphrase{
+							{
+								Name:  "passphrase name",
+								Value: "passphrase value",
+							},
+						},
+					},
+				},
+			},
+		}}
+}
+
 type Registry struct {
 	Organizations []Organization `json:"organizations,omitempty" yaml:"organizations,omitempty" mapstructure:"organizations,omitempty" secure:"true"`
 }
