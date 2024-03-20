@@ -117,7 +117,6 @@ func (o Registry) GetTransformConfig() cryptostruct.TransformConfig {
 }
 
 type SecureRegistry struct {
-	Name          string                    `json:"name" yaml:"name" mapstructure:"name" secure:"false"`
 	Organizations []SecureOrganization      `json:"organizations,omitempty" yaml:"organizations,omitempty" mapstructure:"organizations,omitempty" secure:"true"`
 	CryptoParams  cryptostruct.CryptoParams `json:"cryptoParams" yaml:"cryptoParams" mapstructure:"cryptoParams"`
 }
