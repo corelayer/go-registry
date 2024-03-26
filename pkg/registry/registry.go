@@ -83,7 +83,7 @@ func NewEmptyRegistry() Registry {
 								{
 									Name:      "acme provider name",
 									Type:      "acme provider type",
-									Challenge: "acme challenge type: http-01 | dns-01",
+									Challenge: "acme challenge type http-01 | dns-01",
 									Variables: []AcmeVariable{
 										{
 											Key:   "acme provider variable name",
