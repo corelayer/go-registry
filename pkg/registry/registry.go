@@ -16,19 +16,100 @@
 
 package registry
 
-import (
-	"github.com/corelayer/go-cryptostruct/pkg/cryptostruct"
+import "github.com/corelayer/go-cryptostruct/pkg/cryptostruct"
 
-	"github.com/corelayer/go-registry/pkg/registry/certificates"
-	"github.com/corelayer/go-registry/pkg/registry/machines"
-)
-
-type Registry struct {
-	Machines     machines.Registry     `json:"machines,omitempty" yaml:"machines,omitempty" mapstructure:"machines,omitempty" secure:"true"`
-	Certificates certificates.Registry `json:"certificates,omitempty" yaml:"certificates,omitempty" mapstructure:"certificates,omitempty" secure:"true"`
+func NewEmptyRegistry() Registry {
+	return Registry{
+		Organizations: []Organization{
+			{
+				Name: "organization name",
+				Registry: OrganizationRegistry{
+					Machines: MachinesRegistry{
+						NetScaler: NetScalerRegistry{
+							Adc: NetScalerAdcRegistry{
+								Environments: []NetScalerAdcEnvironment{
+									{
+										Name: "netcaler adc environment name",
+										Management: NetScalerAdcNode{
+											Name:    "netscaler adc snip name",
+											Address: "netscaler adc snip ip address | fqdn",
+										},
+										Nodes: []NetScalerAdcNode{
+											{
+												Name:    "netscaler adc nsip name",
+												Address: "netscaler adc nsip ip address | fqdn",
+											},
+										},
+										Credentials: []NetScalerAdcCredential{
+											{
+												Name:     "netscaler adc credential name",
+												Username: "netscaler adc credential username",
+												Password: "netscaler adc credential password",
+											},
+										},
+										Settings: NetScalerAdcSettings{
+											UseSsl:                    false,
+											Timeout:                   30,
+											UserAgent:                 "go-cts",
+											ValidateServerCertificate: true,
+											LogTlsSecrets:             false,
+											LogTlsSecretsDestination:  "",
+											AutoLogin:                 false,
+										},
+									},
+								},
+							},
+						},
+					},
+					Certificates: CertificateRegistry{
+						Acme: AcmeRegistry{
+							Services: []AcmeService{
+								{
+									Name: "acme service name",
+									Url:  "acme service url",
+								},
+							},
+							Users: []AcmeUser{
+								{
+									Name:  "acme user name",
+									Email: "acme user email",
+									ExternalAccountBinding: AcmeExternalAccountBinding{
+										Kid:  "acme user kid value",
+										Hmac: "acme user hmac value",
+									},
+								},
+							},
+							Providers: []AcmeProvider{
+								{
+									Name:      "acme provider name",
+									Type:      "acme provider type",
+									Challenge: "acme challenge type http-01 | dns-01",
+									Variables: []AcmeVariable{
+										{
+											Key:   "acme provider variable name",
+											Value: "acme provider variable value",
+										},
+									},
+								},
+							},
+						},
+						Passphrases: []CertificatePassphrase{
+							{
+								Name:  "passphrase name",
+								Value: "passphrase value",
+							},
+						},
+					},
+				},
+			},
+		}}
 }
 
-func (c Registry) GetTransformConfig() cryptostruct.TransformConfig {
+type Registry struct {
+	Organizations []Organization `json:"organizations,omitempty" yaml:"organizations,omitempty" mapstructure:"organizations,omitempty" secure:"true"`
+}
+
+func (o Registry) GetTransformConfig() cryptostruct.TransformConfig {
 	return cryptostruct.TransformConfig{
 		Decrypted: Registry{},
 		Encrypted: SecureRegistry{},
@@ -36,9 +117,12 @@ func (c Registry) GetTransformConfig() cryptostruct.TransformConfig {
 }
 
 type SecureRegistry struct {
-	Machines     machines.SecureRegistry     `json:"machines,omitempty" yaml:"machines,omitempty" mapstructure:"machines,omitempty" secure:"true"`
-	Certificates certificates.SecureRegistry `json:"certificates,omitempty" yaml:"certificates,omitempty" mapstructure:"certificates,omitempty" secure:"true"`
-	CryptoParams cryptostruct.CryptoParams   `json:"cryptoParams" yaml:"cryptoParams" mapstructure:"cryptoParams"`
+	Organizations []SecureOrganization      `json:"organizations,omitempty" yaml:"organizations,omitempty" mapstructure:"organizations,omitempty" secure:"true"`
+	CryptoParams  cryptostruct.CryptoParams `json:"cryptoParams" yaml:"cryptoParams" mapstructure:"cryptoParams"`
+}
+
+func (s SecureRegistry) GetCryptoParams() cryptostruct.CryptoParams {
+	return s.CryptoParams
 }
 
 func (s SecureRegistry) GetTransformConfig() cryptostruct.TransformConfig {
@@ -46,8 +130,4 @@ func (s SecureRegistry) GetTransformConfig() cryptostruct.TransformConfig {
 		Decrypted: Registry{},
 		Encrypted: SecureRegistry{},
 	}
-}
-
-func (s SecureRegistry) GetCryptoParams() cryptostruct.CryptoParams {
-	return s.CryptoParams
 }

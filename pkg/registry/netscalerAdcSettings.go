@@ -14,10 +14,10 @@
  *    limitations under the License.
  */
 
-package adc
+package registry
 
-// Settings TODO - Remove UserAgent, AutoLogin, Timeout??
-type Settings struct {
+// NetScalerAdcSettings TODO - Remove UserAgent, AutoLogin, Timeout??
+type NetScalerAdcSettings struct {
 	UseSsl                    bool   `json:"useSsl,omitempty" yaml:"useSsl,omitempty" mapstructure:"useSsl,omitempty"`
 	Timeout                   int    `json:"timeout,omitempty" yaml:"timeout,omitempty" mapstructure:"timeout,omitempty"`
 	UserAgent                 string `json:"userAgent,omitempty" yaml:"userAgent,omitempty" mapstructure:"userAgent,omitempty"`

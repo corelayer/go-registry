@@ -14,7 +14,7 @@
  *    limitations under the License.
  */
 
-package adc
+package registry
 
 import (
 	"fmt"
@@ -26,31 +26,31 @@ import (
 	"golang.org/x/crypto/ssh"
 )
 
-type Environment struct {
-	Name        string       `json:"name,omitempty" yaml:"name,omitempty" mapstructure:"name,omitempty" secure:"false"`                     // Target environment name, such as "Production"
-	Management  Node         `json:"management,omitempty" yaml:"management,omitempty" mapstructure:"management,omitempty" secure:"true"`    // Connection details for the Management Address (SNIP / Cluster IP) of the environment
-	Nodes       []Node       `json:"nodes,omitempty" yaml:"nodes,omitempty" mapstructure:"nodes,omitempty" secure:"true"`                   // Connection details for the individual Nodes of each node
-	Credentials []Credential `json:"credentials,omitempty" yaml:"credentials,omitempty" mapstructure:"credentials,omitempty" secure:"true"` // Connection credentials
-	Settings    Settings     `json:"settings,omitempty" yaml:"settings,omitempty" mapstructure:"settings,omitempty" secure:"false"`         // Connection settings for Nitro Client
+type NetScalerAdcEnvironment struct {
+	Name        string                   `json:"name,omitempty" yaml:"name,omitempty" mapstructure:"name,omitempty" secure:"false"`                     // Target environment name, such as "Production"
+	Management  NetScalerAdcNode         `json:"management,omitempty" yaml:"management,omitempty" mapstructure:"management,omitempty" secure:"true"`    // Connection details for the Management Address (SNIP / Cluster IP) of the environment
+	Nodes       []NetScalerAdcNode       `json:"nodes,omitempty" yaml:"nodes,omitempty" mapstructure:"nodes,omitempty" secure:"true"`                   // Connection details for the individual Nodes of each node
+	Credentials []NetScalerAdcCredential `json:"credentials,omitempty" yaml:"credentials,omitempty" mapstructure:"credentials,omitempty" secure:"true"` // Connection credentials
+	Settings    NetScalerAdcSettings     `json:"settings,omitempty" yaml:"settings,omitempty" mapstructure:"settings,omitempty" secure:"false"`         // Connection settings for Nitro Client
 }
 
-func (e Environment) GetTransformConfig() cryptostruct.TransformConfig {
+func (e NetScalerAdcEnvironment) GetTransformConfig() cryptostruct.TransformConfig {
 	return cryptostruct.TransformConfig{
-		Decrypted: Environment{},
-		Encrypted: SecureEnvironment{},
+		Decrypted: NetScalerAdcEnvironment{},
+		Encrypted: SecureNetScalerAdcEnvironment{},
 	}
 }
 
-func (e Environment) GetCredentialByName(name string) (Credential, error) {
+func (e NetScalerAdcEnvironment) GetCredentialByName(name string) (NetScalerAdcCredential, error) {
 	for _, c := range e.Credentials {
 		if c.Name == name {
 			return c, nil
 		}
 	}
-	return Credential{}, fmt.Errorf("could not find credential %s in environment %s", name, e.Name)
+	return NetScalerAdcCredential{}, fmt.Errorf("could not find credential %s in environment %s", name, e.Name)
 }
 
-func (e Environment) GetNodeScpClient(nodeName string, credential Credential, f ssh.HostKeyCallback) (scp.Client, error) {
+func (e NetScalerAdcEnvironment) GetNodeScpClient(nodeName string, credential NetScalerAdcCredential, f ssh.HostKeyCallback) (scp.Client, error) {
 	var (
 		err          error
 		clientConfig ssh.ClientConfig
@@ -69,7 +69,7 @@ func (e Environment) GetNodeScpClient(nodeName string, credential Credential, f 
 	return scp.Client{}, fmt.Errorf("could not intialize scp client")
 }
 
-func (e Environment) GetNodeNitroClient(nodeName string, credential Credential) (*nitro.Client, error) {
+func (e NetScalerAdcEnvironment) GetNodeNitroClient(nodeName string, credential NetScalerAdcCredential) (*nitro.Client, error) {
 	var (
 		err    error
 		client *nitro.Client
@@ -102,7 +102,7 @@ func (e Environment) GetNodeNitroClient(nodeName string, credential Credential) 
 	return nil, fmt.Errorf("could not create client for node %s with error: node not found in environment %s", nodeName, e.Name)
 }
 
-func (e Environment) GetManagementClient(credential Credential) (*nitro.Client, error) {
+func (e NetScalerAdcEnvironment) GetManagementClient(credential NetScalerAdcCredential) (*nitro.Client, error) {
 	// Return the SNIP Node if defined in the environment
 	if !e.HasManagement() {
 		return nil, fmt.Errorf("no management node defined for environment %s", e.Name)
@@ -131,7 +131,7 @@ func (e Environment) GetManagementClient(credential Credential) (*nitro.Client, 
 	return client, nil
 }
 
-func (e Environment) GetNodeNames() []string {
+func (e NetScalerAdcEnvironment) GetNodeNames() []string {
 	var (
 		output []string
 	)
@@ -143,8 +143,8 @@ func (e Environment) GetNodeNames() []string {
 	return output
 }
 
-func (e Environment) GetNodes() []Node {
-	var output []Node
+func (e NetScalerAdcEnvironment) GetNodes() []NetScalerAdcNode {
+	var output []NetScalerAdcNode
 	output = append(output, e.Nodes...)
 
 	if e.HasManagement() {
@@ -153,7 +153,7 @@ func (e Environment) GetNodes() []Node {
 	return output
 }
 
-func (e Environment) GetPrimaryClient(credential Credential) (*nitro.Client, error) {
+func (e NetScalerAdcEnvironment) GetPrimaryClient(credential NetScalerAdcCredential) (*nitro.Client, error) {
 	var (
 		err    error
 		client *nitro.Client
@@ -188,37 +188,37 @@ func (e Environment) GetPrimaryClient(credential Credential) (*nitro.Client, err
 	return nil, fmt.Errorf("could not find a primary node for environment %s", e.Name)
 }
 
-func (e Environment) HasNodes() bool {
+func (e NetScalerAdcEnvironment) HasNodes() bool {
 	if len(e.Nodes) == 0 {
 		return false
 	}
 	return true
 }
 
-func (e Environment) HasManagement() bool {
-	emptyNode := Node{}
+func (e NetScalerAdcEnvironment) HasManagement() bool {
+	emptyNode := NetScalerAdcNode{}
 	if e.Management != emptyNode {
 		return true
 	}
 	return false
 }
 
-type SecureEnvironment struct {
-	Name         string                    `json:"name,omitempty" yaml:"name,omitempty" mapstructure:"name,omitempty" secure:"false"`                     // Target environment name, such as "Production"
-	Management   SecureNode                `json:"management,omitempty" yaml:"management,omitempty" mapstructure:"management,omitempty" secure:"true"`    // Connection details for the Management Address (SNIP / Cluster IP) of the environment
-	Nodes        []SecureNode              `json:"nodes,omitempty" yaml:"nodes,omitempty" mapstructure:"nodes,omitempty" secure:"true"`                   // Connection details for the individual Nodes of each node
-	Credentials  []SecureCredential        `json:"credentials,omitempty" yaml:"credentials,omitempty" mapstructure:"credentials,omitempty" secure:"true"` // Connection credentials
-	Settings     Settings                  `json:"settings,omitempty" yaml:"settings,omitempty" mapstructure:"settings,omitempty" secure:"false"`         // Connection settings for Nitro Client
-	CryptoParams cryptostruct.CryptoParams `json:"cryptoParams" yaml:"cryptoParams" mapstructure:"cryptoParams"`
+type SecureNetScalerAdcEnvironment struct {
+	Name         string                         `json:"name,omitempty" yaml:"name,omitempty" mapstructure:"name,omitempty" secure:"false"`                     // Target environment name, such as "Production"
+	Management   SecureNetScalerAdcNode         `json:"management,omitempty" yaml:"management,omitempty" mapstructure:"management,omitempty" secure:"true"`    // Connection details for the Management Address (SNIP / Cluster IP) of the environment
+	Nodes        []SecureNetScalerAdcNode       `json:"nodes,omitempty" yaml:"nodes,omitempty" mapstructure:"nodes,omitempty" secure:"true"`                   // Connection details for the individual Nodes of each node
+	Credentials  []SecureNetScalerAdcCredential `json:"credentials,omitempty" yaml:"credentials,omitempty" mapstructure:"credentials,omitempty" secure:"true"` // Connection credentials
+	Settings     NetScalerAdcSettings           `json:"settings,omitempty" yaml:"settings,omitempty" mapstructure:"settings,omitempty" secure:"false"`         // Connection settings for Nitro Client
+	CryptoParams cryptostruct.CryptoParams      `json:"cryptoParams" yaml:"cryptoParams" mapstructure:"cryptoParams"`
 }
 
-func (s SecureEnvironment) GetTransformConfig() cryptostruct.TransformConfig {
-	return cryptostruct.TransformConfig{
-		Decrypted: Environment{},
-		Encrypted: SecureEnvironment{},
-	}
-}
-
-func (s SecureEnvironment) GetCryptoParams() cryptostruct.CryptoParams {
+func (s SecureNetScalerAdcEnvironment) GetCryptoParams() cryptostruct.CryptoParams {
 	return s.CryptoParams
+}
+
+func (s SecureNetScalerAdcEnvironment) GetTransformConfig() cryptostruct.TransformConfig {
+	return cryptostruct.TransformConfig{
+		Decrypted: NetScalerAdcEnvironment{},
+		Encrypted: SecureNetScalerAdcEnvironment{},
+	}
 }

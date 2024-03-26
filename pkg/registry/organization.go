@@ -21,8 +21,8 @@ import (
 )
 
 type Organization struct {
-	Name     string   `json:"name" yaml:"name" mapstructure:"name" secure:"false"`
-	Registry Registry `json:"registry,omitempty" yaml:"registry,omitempty" mapstructure:"registry,omitempty" secure:"true"`
+	Name     string               `json:"name" yaml:"name" mapstructure:"name" secure:"false"`
+	Registry OrganizationRegistry `json:"registry,omitempty" yaml:"registry,omitempty" mapstructure:"registry,omitempty" secure:"true"`
 }
 
 func (o Organization) GetTransformConfig() cryptostruct.TransformConfig {
@@ -33,9 +33,13 @@ func (o Organization) GetTransformConfig() cryptostruct.TransformConfig {
 }
 
 type SecureOrganization struct {
-	Name         string                    `json:"name" yaml:"name" mapstructure:"name" secure:"false"`
-	Registry     SecureRegistry            `json:"registry,omitempty" yaml:"registry,omitempty" mapstructure:"registry,omitempty" secure:"true"`
-	CryptoParams cryptostruct.CryptoParams `json:"cryptoParams" yaml:"cryptoParams" mapstructure:"cryptoParams"`
+	Name         string                     `json:"name" yaml:"name" mapstructure:"name" secure:"false"`
+	Registry     SecureOrganizationRegistry `json:"registry,omitempty" yaml:"registry,omitempty" mapstructure:"registry,omitempty" secure:"true"`
+	CryptoParams cryptostruct.CryptoParams  `json:"cryptoParams" yaml:"cryptoParams" mapstructure:"cryptoParams"`
+}
+
+func (s SecureOrganization) GetCryptoParams() cryptostruct.CryptoParams {
+	return s.CryptoParams
 }
 
 func (s SecureOrganization) GetTransformConfig() cryptostruct.TransformConfig {
@@ -43,8 +47,4 @@ func (s SecureOrganization) GetTransformConfig() cryptostruct.TransformConfig {
 		Decrypted: Organization{},
 		Encrypted: SecureOrganization{},
 	}
-}
-
-func (s SecureOrganization) GetCryptoParams() cryptostruct.CryptoParams {
-	return s.CryptoParams
 }

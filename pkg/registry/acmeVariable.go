@@ -14,35 +14,51 @@
  *    limitations under the License.
  */
 
-package acme
+package registry
 
-import "github.com/corelayer/go-cryptostruct/pkg/cryptostruct"
+import (
+	"encoding/hex"
 
-type Variable struct {
+	"github.com/corelayer/go-cryptostruct/pkg/cryptostruct"
+)
+
+type AcmeVariable struct {
 	Key   string `json:"key,omitempty" yaml:"key,omitempty" mapstructure:"key,omitempty" secure:"false"`
 	Value string `json:"value,omitempty" yaml:"value,omitempty" mapstructure:"value,omitempty" secure:"true"`
 }
 
-func (v Variable) GetTransformConfig() cryptostruct.TransformConfig {
+func (v AcmeVariable) GetTransformConfig() cryptostruct.TransformConfig {
 	return cryptostruct.TransformConfig{
-		Decrypted: Variable{},
-		Encrypted: SecureVariable{},
+		Decrypted: AcmeVariable{},
+		Encrypted: SecureAcmeVariable{},
 	}
 }
 
-type SecureVariable struct {
+type SecureAcmeVariable struct {
 	Key          string                    `json:"key,omitempty" yaml:"key,omitempty" mapstructure:"key,omitempty" secure:"false"`
 	Value        string                    `json:"value,omitempty" yaml:"value,omitempty" mapstructure:"value,omitempty" secure:"true"`
 	CryptoParams cryptostruct.CryptoParams `json:"cryptoParams" yaml:"cryptoParams" mapstructure:"cryptoParams"`
 }
 
-func (s SecureVariable) GetTransformConfig() cryptostruct.TransformConfig {
-	return cryptostruct.TransformConfig{
-		Decrypted: Variable{},
-		Encrypted: SecureVariable{},
+func (s SecureAcmeVariable) Decrypt(key string) (AcmeVariable, error) {
+	var (
+		err       error
+		decrypted any
+	)
+	decrypter := cryptostruct.NewDecrypter(hex.EncodeToString([]byte(key)), s.GetTransformConfig())
+	if decrypted, err = decrypter.Transform(s); err != nil {
+		return AcmeVariable{}, err
 	}
+	return decrypted.(AcmeVariable), nil
 }
 
-func (s SecureVariable) GetCryptoParams() cryptostruct.CryptoParams {
+func (s SecureAcmeVariable) GetCryptoParams() cryptostruct.CryptoParams {
 	return s.CryptoParams
+}
+
+func (s SecureAcmeVariable) GetTransformConfig() cryptostruct.TransformConfig {
+	return cryptostruct.TransformConfig{
+		Decrypted: AcmeVariable{},
+		Encrypted: SecureAcmeVariable{},
+	}
 }

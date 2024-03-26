@@ -14,35 +14,51 @@
  *    limitations under the License.
  */
 
-package adc
+package registry
 
-import "github.com/corelayer/go-cryptostruct/pkg/cryptostruct"
+import (
+	"encoding/hex"
 
-type Node struct {
+	"github.com/corelayer/go-cryptostruct/pkg/cryptostruct"
+)
+
+type NetScalerAdcNode struct {
 	Name    string `json:"name,omitempty" yaml:"name,omitempty" mapstructure:"name,omitempty" secure:"false"`
 	Address string `json:"address,omitempty" yaml:"address,omitempty" mapstructure:"address,omitempty" secure:"true"`
 }
 
-func (n Node) GetTransformConfig() cryptostruct.TransformConfig {
+func (n NetScalerAdcNode) GetTransformConfig() cryptostruct.TransformConfig {
 	return cryptostruct.TransformConfig{
-		Decrypted: Node{},
-		Encrypted: SecureNode{},
+		Decrypted: NetScalerAdcNode{},
+		Encrypted: SecureNetScalerAdcNode{},
 	}
 }
 
-type SecureNode struct {
+type SecureNetScalerAdcNode struct {
 	Name         string                    `json:"name,omitempty" yaml:"name,omitempty" mapstructure:"name,omitempty" secure:"false"`
 	Address      string                    `json:"address,omitempty" yaml:"address,omitempty" mapstructure:"address,omitempty" secure:"true"`
 	CryptoParams cryptostruct.CryptoParams `json:"cryptoParams" yaml:"cryptoParams" mapstructure:"cryptoParams"`
 }
 
-func (s SecureNode) GetTransformConfig() cryptostruct.TransformConfig {
-	return cryptostruct.TransformConfig{
-		Decrypted: Node{},
-		Encrypted: SecureNode{},
+func (s SecureNetScalerAdcNode) Decrypt(key string) (NetScalerAdcNode, error) {
+	var (
+		err       error
+		decrypted any
+	)
+	decrypter := cryptostruct.NewDecrypter(hex.EncodeToString([]byte(key)), s.GetTransformConfig())
+	if decrypted, err = decrypter.Transform(s); err != nil {
+		return NetScalerAdcNode{}, err
 	}
+	return decrypted.(NetScalerAdcNode), nil
 }
 
-func (s SecureNode) GetCryptoParams() cryptostruct.CryptoParams {
+func (s SecureNetScalerAdcNode) GetCryptoParams() cryptostruct.CryptoParams {
 	return s.CryptoParams
+}
+
+func (s SecureNetScalerAdcNode) GetTransformConfig() cryptostruct.TransformConfig {
+	return cryptostruct.TransformConfig{
+		Decrypted: NetScalerAdcNode{},
+		Encrypted: SecureNetScalerAdcNode{},
+	}
 }

@@ -14,37 +14,34 @@
  *    limitations under the License.
  */
 
-package machines
+package registry
 
 import (
 	"github.com/corelayer/go-cryptostruct/pkg/cryptostruct"
-
-	"github.com/corelayer/go-registry/pkg/registry/machines/netscaler"
 )
 
-type Registry struct {
-	NetScaler netscaler.Registry `json:"netscaler,omitempty" yaml:"netscaler,omitempty" mapstructure:"netscaler,omitempty" secure:"true"`
+type NetScalerSdxRegistry struct {
+	// Environments []Environment `json:"environments" yaml:"environments" mapstructure:"environments" secure:"true"`
 }
 
-func (r Registry) GetTransformConfig() cryptostruct.TransformConfig {
+func (r NetScalerSdxRegistry) GetTransformConfig() cryptostruct.TransformConfig {
 	return cryptostruct.TransformConfig{
-		Decrypted: Registry{},
-		Encrypted: SecureRegistry{},
+		Decrypted: NetScalerSdxRegistry{},
+		Encrypted: SecureNetScalerSdxRegistry{},
 	}
 }
 
-type SecureRegistry struct {
-	NetScaler    netscaler.SecureRegistry  `json:"netscaler,omitempty" yaml:"netscaler,omitempty" mapstructure:"netscaler,omitempty" secure:"true"`
+type SecureNetScalerSdxRegistry struct {
 	CryptoParams cryptostruct.CryptoParams `json:"cryptoParams" yaml:"cryptoParams" mapstructure:"cryptoParams"`
 }
 
-func (s SecureRegistry) GetTransformConfig() cryptostruct.TransformConfig {
-	return cryptostruct.TransformConfig{
-		Decrypted: Registry{},
-		Encrypted: SecureRegistry{},
-	}
+func (s SecureNetScalerSdxRegistry) GetCryptoParams() cryptostruct.CryptoParams {
+	return s.CryptoParams
 }
 
-func (s SecureRegistry) GetCryptoParams() cryptostruct.CryptoParams {
-	return s.CryptoParams
+func (s SecureNetScalerSdxRegistry) GetTransformConfig() cryptostruct.TransformConfig {
+	return cryptostruct.TransformConfig{
+		Decrypted: NetScalerSdxRegistry{},
+		Encrypted: SecureNetScalerSdxRegistry{},
+	}
 }
