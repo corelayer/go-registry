@@ -3,7 +3,7 @@ module github.com/corelayer/go-registry
 go 1.22.1
 
 require (
-	github.com/bramvdbogaerde/go-scp v1.3.0
+	github.com/bramvdbogaerde/go-scp v1.4.0
 	github.com/corelayer/go-cryptostruct v0.1.0
 	github.com/corelayer/go-netscaleradc-nitro v0.3.3
 	golang.org/x/crypto v0.21.0
