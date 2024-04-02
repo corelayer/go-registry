@@ -212,6 +212,15 @@ type SecureNetScalerAdcEnvironment struct {
 	CryptoParams cryptostruct.CryptoParams      `json:"cryptoParams" yaml:"cryptoParams" mapstructure:"cryptoParams"`
 }
 
+func (e SecureNetScalerAdcEnvironment) GetCredentialByName(name string) (SecureNetScalerAdcCredential, error) {
+	for _, c := range e.Credentials {
+		if c.Name == name {
+			return c, nil
+		}
+	}
+	return SecureNetScalerAdcCredential{}, fmt.Errorf("could not find credential %s in environment %s", name, e.Name)
+}
+
 func (s SecureNetScalerAdcEnvironment) GetCryptoParams() cryptostruct.CryptoParams {
 	return s.CryptoParams
 }
