@@ -22,6 +22,13 @@ import (
 	"github.com/corelayer/go-cryptostruct/pkg/cryptostruct"
 )
 
+func NewNetScalerAdcNode(name string, address string) NetScalerAdcNode {
+	return NetScalerAdcNode{
+		Name:    name,
+		Address: address,
+	}
+}
+
 type NetScalerAdcNode struct {
 	Name    string `json:"name,omitempty" yaml:"name,omitempty" mapstructure:"name,omitempty" secure:"false"`
 	Address string `json:"address,omitempty" yaml:"address,omitempty" mapstructure:"address,omitempty" secure:"true"`

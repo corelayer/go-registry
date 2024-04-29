@@ -22,6 +22,13 @@ import (
 	"github.com/corelayer/go-cryptostruct/pkg/cryptostruct"
 )
 
+func NewAcmeExternalAccountBinding(kid string, hmac string) AcmeExternalAccountBinding {
+	return AcmeExternalAccountBinding{
+		Kid:  kid,
+		Hmac: hmac,
+	}
+}
+
 type AcmeExternalAccountBinding struct {
 	Kid  string `json:"kid,omitempty" yaml:"kid,omitempty" mapstructure:"kid,omitempty" secure:"true"`
 	Hmac string `json:"hmac,omitempty" yaml:"hmac,omitempty" mapstructure:"hmac,omitempty" secure:"true"`

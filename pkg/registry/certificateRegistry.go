@@ -20,9 +20,21 @@ import (
 	"github.com/corelayer/go-cryptostruct/pkg/cryptostruct"
 )
 
+func NewCertificateRegistry() CertificateRegistry {
+	return CertificateRegistry{
+		Acme:        NewAcmeRegistry(),
+		Passphrases: make([]CertificatePassphrase, 0),
+	}
+}
+
 type CertificateRegistry struct {
 	Acme        AcmeRegistry            `json:"acme,omitempty" yaml:"acme,omitempty" mapstructure:"acme,omitempty" secure:"true"`
 	Passphrases []CertificatePassphrase `json:"passphrases,omitempty" yaml:"passphrases,omitempty" mapstructure:"passphrases,omitempty" secure:"true"`
+}
+
+func (r CertificateRegistry) AddPassphrase(passphrase CertificatePassphrase) CertificateRegistry {
+	r.Passphrases = append(r.Passphrases, passphrase)
+	return r
 }
 
 func (r CertificateRegistry) GetPassphraseByName(name string) (CertificatePassphrase, error) {

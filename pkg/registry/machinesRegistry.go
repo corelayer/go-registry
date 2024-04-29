@@ -20,6 +20,12 @@ import (
 	"github.com/corelayer/go-cryptostruct/pkg/cryptostruct"
 )
 
+func NewMachinesRegistry() MachinesRegistry {
+	return MachinesRegistry{
+		NetScaler: NewNetScalerRegistry(),
+	}
+}
+
 type MachinesRegistry struct {
 	NetScaler NetScalerRegistry `json:"netscaler,omitempty" yaml:"netscaler,omitempty" mapstructure:"netscaler,omitempty" secure:"true"`
 }

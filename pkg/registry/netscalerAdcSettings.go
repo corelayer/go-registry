@@ -16,6 +16,18 @@
 
 package registry
 
+func NewDefaultNetScalerAdcSettings() NetScalerAdcSettings {
+	return NetScalerAdcSettings{
+		UseSsl:                    true,
+		Timeout:                   30,
+		UserAgent:                 "go-netscaleradc-nitro",
+		ValidateServerCertificate: true,
+		LogTlsSecrets:             false,
+		LogTlsSecretsDestination:  "",
+		AutoLogin:                 false,
+	}
+}
+
 // NetScalerAdcSettings TODO - Remove UserAgent, AutoLogin, Timeout??
 type NetScalerAdcSettings struct {
 	UseSsl                    bool   `json:"useSsl,omitempty" yaml:"useSsl,omitempty" mapstructure:"useSsl,omitempty"`

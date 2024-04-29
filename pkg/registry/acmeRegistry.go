@@ -20,6 +20,14 @@ import (
 	"github.com/corelayer/go-cryptostruct/pkg/cryptostruct"
 )
 
+func NewAcmeRegistry() AcmeRegistry {
+	return AcmeRegistry{
+		Services:  make([]AcmeService, 0),
+		Users:     make([]AcmeUser, 0),
+		Providers: make([]AcmeProvider, 0),
+	}
+}
+
 type AcmeRegistry struct {
 	Services  []AcmeService  `json:"services,omitempty" yaml:"services,omitempty" mapstructure:"services,omitempty" secure:"true"`
 	Users     []AcmeUser     `json:"users,omitempty" yaml:"users,omitempty" mapstructure:"users,omitempty" secure:"true"`

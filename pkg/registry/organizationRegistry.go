@@ -20,6 +20,13 @@ import (
 	"github.com/corelayer/go-cryptostruct/pkg/cryptostruct"
 )
 
+func NewOrganizationRegistry() OrganizationRegistry {
+	return OrganizationRegistry{
+		Machines:     NewMachinesRegistry(),
+		Certificates: NewCertificateRegistry(),
+	}
+}
+
 type OrganizationRegistry struct {
 	Machines     MachinesRegistry    `json:"machines,omitempty" yaml:"machines,omitempty" mapstructure:"machines,omitempty" secure:"true"`
 	Certificates CertificateRegistry `json:"certificates,omitempty" yaml:"certificates,omitempty" mapstructure:"certificates,omitempty" secure:"true"`

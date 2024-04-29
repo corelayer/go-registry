@@ -22,6 +22,13 @@ import (
 	"github.com/corelayer/go-cryptostruct/pkg/cryptostruct"
 )
 
+func NewAcmeService(name string, url string) AcmeService {
+	return AcmeService{
+		Name: name,
+		Url:  url,
+	}
+}
+
 type AcmeService struct {
 	Name string `json:"name,omitempty" yaml:"name,omitempty" mapstructure:"name,omitempty" secure:"false"`
 	Url  string `json:"url,omitempty" yaml:"url,omitempty" mapstructure:"url,omitempty" secure:"true"`

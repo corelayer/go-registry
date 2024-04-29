@@ -20,6 +20,10 @@ import (
 	"github.com/corelayer/go-cryptostruct/pkg/cryptostruct"
 )
 
+func NewNetScalerSdxRegistry() NetScalerSdxRegistry {
+	return NetScalerSdxRegistry{}
+}
+
 type NetScalerSdxRegistry struct {
 	// Environments []Environment `json:"environments" yaml:"environments" mapstructure:"environments" secure:"true"`
 }

@@ -20,6 +20,12 @@ import "github.com/corelayer/go-cryptostruct/pkg/cryptostruct"
 
 func NewEmptyRegistry() Registry {
 	return Registry{
+		Organizations: []Organization{NewOrganization("")},
+	}
+}
+
+func NewExampleRegistry() Registry {
+	return Registry{
 		Organizations: []Organization{
 			{
 				Name: "organization name",

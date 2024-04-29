@@ -20,6 +20,12 @@ import (
 	"github.com/corelayer/go-cryptostruct/pkg/cryptostruct"
 )
 
+func NewNetScalerAdcRegistry() NetScalerAdcRegistry {
+	return NetScalerAdcRegistry{
+		Environments: make([]NetScalerAdcEnvironment, 0),
+	}
+}
+
 type NetScalerAdcRegistry struct {
 	Environments []NetScalerAdcEnvironment `json:"environments,omitempty" yaml:"environments,omitempty" mapstructure:"environments,omitempty" secure:"true"`
 }
