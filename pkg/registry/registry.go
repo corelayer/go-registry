@@ -20,6 +20,12 @@ import "github.com/corelayer/go-cryptostruct/pkg/cryptostruct"
 
 func NewEmptyRegistry() Registry {
 	return Registry{
+		Organizations: []Organization{NewOrganization("")},
+	}
+}
+
+func NewExampleRegistry() Registry {
+	return Registry{
 		Organizations: []Organization{
 			{
 				Name: "organization name",
@@ -109,6 +115,24 @@ type Registry struct {
 	Organizations []Organization `json:"organizations,omitempty" yaml:"organizations,omitempty" mapstructure:"organizations,omitempty" secure:"true"`
 }
 
+func (r Registry) GetOrganizationByName(name string) (Organization, error) {
+	for _, o := range r.Organizations {
+		if o.Name == name {
+			return o, nil
+		}
+	}
+	return Organization{}, NewItemNotFoundError("organization", name)
+}
+
+func (r Registry) GetOrganizationNames() []string {
+	names := make([]string, len(r.Organizations))
+	for i := 0; i < len(r.Organizations); i++ {
+		names[i] = r.Organizations[i].Name
+	}
+
+	return names
+}
+
 func (o Registry) GetTransformConfig() cryptostruct.TransformConfig {
 	return cryptostruct.TransformConfig{
 		Decrypted: Registry{},
@@ -123,6 +147,24 @@ type SecureRegistry struct {
 
 func (s SecureRegistry) GetCryptoParams() cryptostruct.CryptoParams {
 	return s.CryptoParams
+}
+
+func (s SecureRegistry) GetOrganizationByName(name string) (SecureOrganization, error) {
+	for _, o := range s.Organizations {
+		if o.Name == name {
+			return o, nil
+		}
+	}
+	return SecureOrganization{}, NewItemNotFoundError("organization", name)
+}
+
+func (s SecureRegistry) GetOrganizationNames() []string {
+	names := make([]string, len(s.Organizations))
+	for i := 0; i < len(s.Organizations); i++ {
+		names[i] = s.Organizations[i].Name
+	}
+
+	return names
 }
 
 func (s SecureRegistry) GetTransformConfig() cryptostruct.TransformConfig {

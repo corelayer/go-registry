@@ -22,6 +22,13 @@ import (
 	"github.com/corelayer/go-cryptostruct/pkg/cryptostruct"
 )
 
+func NewCertificatePassphrase(name string, value string) CertificatePassphrase {
+	return CertificatePassphrase{
+		Name:  name,
+		Value: value,
+	}
+}
+
 type CertificatePassphrase struct {
 	Name  string `json:"name,omitempty" yaml:"name,omitempty" mapstructure:"name,omitempty" secure:"false"`
 	Value string `json:"value,omitempty" yaml:"value,omitempty" mapstructure:"value,omitempty" secure:"true"`

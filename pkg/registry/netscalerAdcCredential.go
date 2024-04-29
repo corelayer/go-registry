@@ -22,6 +22,14 @@ import (
 	"github.com/corelayer/go-cryptostruct/pkg/cryptostruct"
 )
 
+func NewNetScalerAdcCredential(name string, username string, password string) NetScalerAdcCredential {
+	return NetScalerAdcCredential{
+		Name:     name,
+		Username: username,
+		Password: password,
+	}
+}
+
 type NetScalerAdcCredential struct {
 	Name     string `json:"name,omitempty" yaml:"name,omitempty" mapstructure:"name,omitempty" secure:"false"`
 	Username string `json:"username,omitempty" yaml:"username,omitempty" mapstructure:"username,omitempty" secure:"true"`

@@ -22,11 +22,25 @@ import (
 	"github.com/corelayer/go-cryptostruct/pkg/cryptostruct"
 )
 
+func NewAcmeProvider(name string, pType string, challenge string, variables []AcmeVariable) AcmeProvider {
+	return AcmeProvider{
+		Name:      name,
+		Type:      pType,
+		Challenge: challenge,
+		Variables: variables,
+	}
+}
+
 type AcmeProvider struct {
 	Name      string         `json:"name,omitempty" yaml:"name,omitempty" mapstructure:"name,omitempty" secure:"false"`
 	Type      string         `json:"type,omitempty" yaml:"type,omitempty" mapstructure:"type,omitempty" secure:"false"`
 	Challenge string         `json:"challenge,omitempty" yaml:"challenge,omitempty" mapstructure:"challenge,omitempty" secure:"false"`
 	Variables []AcmeVariable `json:"variables,omitempty" yaml:"variables,omitempty" mapstructure:"variables,omitempty" secure:"true"`
+}
+
+func (p AcmeProvider) AddVariable(variable AcmeVariable) AcmeProvider {
+	p.Variables = append(p.Variables, variable)
+	return p
 }
 
 func (p AcmeProvider) ApplyEnvironmentVariables() error {

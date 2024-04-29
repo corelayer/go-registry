@@ -22,6 +22,14 @@ import (
 	"github.com/corelayer/go-cryptostruct/pkg/cryptostruct"
 )
 
+func NewAcmeUser(name string, email string, eab AcmeExternalAccountBinding) AcmeUser {
+	return AcmeUser{
+		Name:                   name,
+		Email:                  email,
+		ExternalAccountBinding: eab,
+	}
+}
+
 type AcmeUser struct {
 	Name                   string                     `json:"name,omitempty" yaml:"name,omitempty" mapstructure:"name,omitempty" secure:"false"`
 	Email                  string                     `json:"email,omitempty" yaml:"email,omitempty" mapstructure:"email,omitempty" secure:"true"`

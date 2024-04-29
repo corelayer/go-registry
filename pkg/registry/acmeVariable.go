@@ -22,6 +22,13 @@ import (
 	"github.com/corelayer/go-cryptostruct/pkg/cryptostruct"
 )
 
+func NewAcmeVariable(key string, value string) AcmeVariable {
+	return AcmeVariable{
+		Key:   key,
+		Value: value,
+	}
+}
+
 type AcmeVariable struct {
 	Key   string `json:"key,omitempty" yaml:"key,omitempty" mapstructure:"key,omitempty" secure:"false"`
 	Value string `json:"value,omitempty" yaml:"value,omitempty" mapstructure:"value,omitempty" secure:"true"`
