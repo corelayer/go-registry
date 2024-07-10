@@ -1,6 +1,6 @@
 module github.com/corelayer/go-registry
 
-go 1.22.1
+go 1.22
 
 require (
 	github.com/bramvdbogaerde/go-scp v1.5.0
