@@ -2,8 +2,8 @@ github.com/bramvdbogaerde/go-scp v1.4.0 h1:jKMwpwCbcX1KyvDbm/PDJuXcMuNVlLGi0Q0re
 github.com/bramvdbogaerde/go-scp v1.4.0/go.mod h1:on2aH5AxaFb2G0N5Vsdy6B0Ml7k9HuHSwfo1y0QzAbQ=
 github.com/corelayer/go-cryptostruct v0.2.1 h1:gUaIHxxIaUjOWG5nBsPMAk9TgUfvfGp0XvzBidbwiSc=
 github.com/corelayer/go-cryptostruct v0.2.1/go.mod h1:PQPaaSa9LM7l2GoL/aQSx30VKHYaNmijWF6VZAxsrNI=
-github.com/corelayer/go-netscaleradc-nitro v0.3.3 h1:cTuHACbQWRtrqHchgupr3Z+ZrRnv1FHnuxAzymNsws4=
-github.com/corelayer/go-netscaleradc-nitro v0.3.3/go.mod h1:t1QnWMQfU5RL/MKrjA+oTuNp+nXRrPX4352jiwbqYCo=
+github.com/corelayer/go-netscaleradc-nitro v0.3.5 h1:Ltd92QN8PPccYgWDZjndRVyPA7qZKpx6Yd2/Po3YMgI=
+github.com/corelayer/go-netscaleradc-nitro v0.3.5/go.mod h1:NmjzHs9HG6b1wOK8YvUEtAWgQ7B7790fkwFjEiVVS60=
 github.com/minio/sio v0.4.0 h1:u4SWVEm5lXSqU42ZWawV0D9I5AZ5YMmo2RXpEQ/kRhc=
 github.com/minio/sio v0.4.0/go.mod h1:oBSjJeGbBdRMZZwna07sX9EFzZy+ywu5aofRiV1g79I=
 golang.org/x/crypto v0.25.0 h1:ypSNr+bnYL2YhwoMt2zPxHFmbAN1KZs/njMG3hxUp30=
