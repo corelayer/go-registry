@@ -1,5 +1,5 @@
-github.com/bramvdbogaerde/go-scp v1.4.0 h1:jKMwpwCbcX1KyvDbm/PDJuXcMuNVlLGi0Q0reuzjyKY=
-github.com/bramvdbogaerde/go-scp v1.4.0/go.mod h1:on2aH5AxaFb2G0N5Vsdy6B0Ml7k9HuHSwfo1y0QzAbQ=
+github.com/bramvdbogaerde/go-scp v1.5.0 h1:a9BinAjTfQh273eh7vd3qUgmBC+bx+3TRDtkZWmIpzM=
+github.com/bramvdbogaerde/go-scp v1.5.0/go.mod h1:on2aH5AxaFb2G0N5Vsdy6B0Ml7k9HuHSwfo1y0QzAbQ=
 github.com/corelayer/go-cryptostruct v0.2.1 h1:gUaIHxxIaUjOWG5nBsPMAk9TgUfvfGp0XvzBidbwiSc=
 github.com/corelayer/go-cryptostruct v0.2.1/go.mod h1:PQPaaSa9LM7l2GoL/aQSx30VKHYaNmijWF6VZAxsrNI=
 github.com/corelayer/go-netscaleradc-nitro v0.3.5 h1:Ltd92QN8PPccYgWDZjndRVyPA7qZKpx6Yd2/Po3YMgI=
