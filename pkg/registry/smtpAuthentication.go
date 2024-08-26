@@ -38,6 +38,10 @@ type SecureSmtpAuthentication struct {
 	CryptoParams       cryptostruct.CryptoParams `json:"cryptoParams" yaml:"cryptoParams" mapstructure:"cryptoParams"`
 }
 
+func (s SecureSmtpAuthentication) GetCryptoParams() cryptostruct.CryptoParams {
+	return s.CryptoParams
+}
+
 func (s SecureSmtpAuthentication) GetTransformConfig() cryptostruct.TransformConfig {
 	return cryptostruct.TransformConfig{
 		Decrypted: SmtpAuthentication{},
