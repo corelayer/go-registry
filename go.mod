@@ -1,6 +1,6 @@
 module github.com/corelayer/go-registry
 
-go 1.22
+go 1.23
 
 require (
 	github.com/bramvdbogaerde/go-scp v1.5.0
@@ -11,5 +11,5 @@ require (
 
 require (
 	github.com/minio/sio v0.4.0 // indirect
-	golang.org/x/sys v0.23.0 // indirect
+	golang.org/x/sys v0.24.0 // indirect
 )
