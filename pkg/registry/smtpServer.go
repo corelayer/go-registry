@@ -21,7 +21,7 @@ import "github.com/corelayer/go-cryptostruct/pkg/cryptostruct"
 type SmtpServer struct {
 	Name           string             `json:"name,omitempty" yaml:"name,omitempty" mapstructure:"name,omitempty" secure:"false"`
 	Address        string             `json:"address,omitempty" yaml:"address,omitempty" mapstructure:"address,omitempty" secure:"true"`
-	Port           int                `json:"port,omitempty" yaml:"port,omitempty" mapstructure:"port,omitempty" secure:"true"`
+	Port           string             `json:"port,omitempty" yaml:"port,omitempty" mapstructure:"port,omitempty" secure:"true"`
 	Authentication SmtpAuthentication `json:"authentication,omitempty" yaml:"authentication,omitempty" mapstructure:"authentication,omitempty" secure:"true"`
 }
 
@@ -35,7 +35,7 @@ func (s SmtpServer) GetTransformConfig() cryptostruct.TransformConfig {
 type SecureSmtpServer struct {
 	Name           string                    `json:"name,omitempty" yaml:"name,omitempty" mapstructure:"name,omitempty" secure:"false"`
 	Address        string                    `json:"address,omitempty" yaml:"address,omitempty" mapstructure:"address,omitempty" secure:"true"`
-	Port           int                       `json:"port,omitempty" yaml:"port,omitempty" mapstructure:"port,omitempty" secure:"true"`
+	Port           string                    `json:"port,omitempty" yaml:"port,omitempty" mapstructure:"port,omitempty" secure:"true"`
 	Authentication SecureSmtpAuthentication  `json:"authentication,omitempty" yaml:"authentication,omitempty" mapstructure:"authentication,omitempty" secure:"true"`
 	CryptoParams   cryptostruct.CryptoParams `json:"cryptoParams" yaml:"cryptoParams" mapstructure:"cryptoParams"`
 }
