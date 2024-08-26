@@ -35,7 +35,7 @@ func NewExampleRegistry() Registry {
 							Adc: NetScalerAdcRegistry{
 								Environments: []NetScalerAdcEnvironment{
 									{
-										Name: "netcaler adc environment name",
+										Name: "netscaler adc environment name",
 										Management: NetScalerAdcNode{
 											Name:    "netscaler adc snip name",
 											Address: "netscaler adc snip ip address | fqdn",
