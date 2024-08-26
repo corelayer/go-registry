@@ -24,12 +24,14 @@ func NewOrganizationRegistry() OrganizationRegistry {
 	return OrganizationRegistry{
 		Machines:     NewMachinesRegistry(),
 		Certificates: NewCertificateRegistry(),
+		Mail:         NewMailRegistry(),
 	}
 }
 
 type OrganizationRegistry struct {
 	Machines     MachinesRegistry    `json:"machines,omitempty" yaml:"machines,omitempty" mapstructure:"machines,omitempty" secure:"true"`
 	Certificates CertificateRegistry `json:"certificates,omitempty" yaml:"certificates,omitempty" mapstructure:"certificates,omitempty" secure:"true"`
+	Mail         MailRegistry        `json:"mail,omitempty" yaml:"mail,omitempty" mapstructure:"mail,omitempty" secure:"true"`
 }
 
 func (c OrganizationRegistry) GetTransformConfig() cryptostruct.TransformConfig {
@@ -42,6 +44,7 @@ func (c OrganizationRegistry) GetTransformConfig() cryptostruct.TransformConfig 
 type SecureOrganizationRegistry struct {
 	Machines     SecureMachinesRegistry    `json:"machines,omitempty" yaml:"machines,omitempty" mapstructure:"machines,omitempty" secure:"true"`
 	Certificates SecureCertificateRegistry `json:"certificates,omitempty" yaml:"certificates,omitempty" mapstructure:"certificates,omitempty" secure:"true"`
+	Mail         SecureMailRegistry        `json:"mail,omitempty" yaml:"mail,omitempty" mapstructure:"mail,omitempty" secure:"true"`
 	CryptoParams cryptostruct.CryptoParams `json:"cryptoParams" yaml:"cryptoParams" mapstructure:"cryptoParams"`
 }
 
