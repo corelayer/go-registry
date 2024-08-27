@@ -18,11 +18,17 @@ package registry
 
 import "github.com/corelayer/go-cryptostruct/pkg/cryptostruct"
 
+type SmtpServerSettings struct {
+	UseSsl     bool `json:"useSsl,omitempty" yaml:"useSsl,omitempty" mapstructure:"useSsl,omitempty" secure:"false"`
+	UseTls     bool `json:"useTls,omitempty" yaml:"useTls,omitempty" mapstructure:"useTls,omitempty" secure:"false"`
+	CustomPort int  `json:"customPort,omitempty" yaml:"customPort,omitempty" mapstructure:"customPort,omitempty" secure:"false"`
+}
+
 type SmtpServer struct {
-	Name           string             `json:"name,omitempty" yaml:"name,omitempty" mapstructure:"name,omitempty" secure:"false"`
-	Address        string             `json:"address,omitempty" yaml:"address,omitempty" mapstructure:"address,omitempty" secure:"true"`
-	Port           string             `json:"port,omitempty" yaml:"port,omitempty" mapstructure:"port,omitempty" secure:"true"`
-	Authentication SmtpAuthentication `json:"authentication,omitempty" yaml:"authentication,omitempty" mapstructure:"authentication,omitempty" secure:"true"`
+	Name        string             `json:"name,omitempty" yaml:"name,omitempty" mapstructure:"name,omitempty" secure:"false"`
+	Address     string             `json:"address,omitempty" yaml:"address,omitempty" mapstructure:"address,omitempty" secure:"true"`
+	Credentials SmtpCredentials    `json:"credentials,omitempty" yaml:"credentials,omitempty" mapstructure:"credentials,omitempty" secure:"true"`
+	Settings    SmtpServerSettings `json:"settings,omitempty" yaml:"settings,omitempty" mapstructure:"settings" secure:"false"`
 }
 
 func (s SmtpServer) GetTransformConfig() cryptostruct.TransformConfig {
@@ -33,11 +39,12 @@ func (s SmtpServer) GetTransformConfig() cryptostruct.TransformConfig {
 }
 
 type SecureSmtpServer struct {
-	Name           string                    `json:"name,omitempty" yaml:"name,omitempty" mapstructure:"name,omitempty" secure:"false"`
-	Address        string                    `json:"address,omitempty" yaml:"address,omitempty" mapstructure:"address,omitempty" secure:"true"`
-	Port           string                    `json:"port,omitempty" yaml:"port,omitempty" mapstructure:"port,omitempty" secure:"true"`
-	Authentication SecureSmtpAuthentication  `json:"authentication,omitempty" yaml:"authentication,omitempty" mapstructure:"authentication,omitempty" secure:"true"`
-	CryptoParams   cryptostruct.CryptoParams `json:"cryptoParams" yaml:"cryptoParams" mapstructure:"cryptoParams"`
+	Name         string                    `json:"name,omitempty" yaml:"name,omitempty" mapstructure:"name,omitempty" secure:"false"`
+	Address      string                    `json:"address,omitempty" yaml:"address,omitempty" mapstructure:"address,omitempty" secure:"true"`
+	Port         string                    `json:"port,omitempty" yaml:"port,omitempty" mapstructure:"port,omitempty" secure:"true"`
+	Credentials  SecureSmtpCredentials     `json:"credentials,omitempty" yaml:"credentials,omitempty" mapstructure:"credentials,omitempty" secure:"true"`
+	Settings     SmtpServerSettings        `json:"settings,omitempty" yaml:"settings,omitempty" mapstructure:"settings" secure:"false"`
+	CryptoParams cryptostruct.CryptoParams `json:"cryptoParams" yaml:"cryptoParams" mapstructure:"cryptoParams"`
 }
 
 func (s SecureSmtpServer) GetCryptoParams() cryptostruct.CryptoParams {
