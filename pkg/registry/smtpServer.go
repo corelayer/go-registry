@@ -41,7 +41,6 @@ func (s SmtpServer) GetTransformConfig() cryptostruct.TransformConfig {
 type SecureSmtpServer struct {
 	Name         string                    `json:"name,omitempty" yaml:"name,omitempty" mapstructure:"name,omitempty" secure:"false"`
 	Address      string                    `json:"address,omitempty" yaml:"address,omitempty" mapstructure:"address,omitempty" secure:"true"`
-	Port         string                    `json:"port,omitempty" yaml:"port,omitempty" mapstructure:"port,omitempty" secure:"true"`
 	Credentials  SecureSmtpCredentials     `json:"credentials,omitempty" yaml:"credentials,omitempty" mapstructure:"credentials,omitempty" secure:"true"`
 	Settings     SmtpServerSettings        `json:"settings,omitempty" yaml:"settings,omitempty" mapstructure:"settings" secure:"false"`
 	CryptoParams cryptostruct.CryptoParams `json:"cryptoParams" yaml:"cryptoParams" mapstructure:"cryptoParams"`
